@@ -44,9 +44,9 @@ class BluetoothDiscovery(BluetoothTask):
 		self.scanAbortTimer = eTimer()
 		self.scanAbortTimer.callback.append(self.addTaskAbortScan)
 
-		#self.pairingTime = 15
-		#self.pairingCancelTimer = eTimer()
-		#self.pairingCancelTimer.callback.append(self.pairingCancelTimerCB)
+		# self.pairingTime = 15
+		# self.pairingCancelTimer = eTimer()
+		# self.pairingCancelTimer.callback.append(self.pairingCancelTimerCB)
 
 		self.eventTimer = eTimer()
 		self.eventTimer.callback.append(self.handleEvents)
@@ -76,13 +76,13 @@ class BluetoothDiscovery(BluetoothTask):
 	def initialStart(self):
 		# clear scan list
 		self.gbbt.resetScan()
-		###print "initialStart"
+		# print "initialStart"
 		self.addTaskStartScan()
 
 	def deInit(self):
 		self.scanningTimer.stop()
 		self.scanAbortTimer.stop()
-		#self.pairingCancelTimer.stop()
+		# self.pairingCancelTimer.stop()
 		self.eventTimer.stop()
 
 		self.appendEventCallback(False)
@@ -113,8 +113,8 @@ class BluetoothDiscovery(BluetoothTask):
 		self.scanningShowValue = (self.scanningShowValue % self.scanningShowMax) + 1
 
 	def discEventCallback(self, event, _data):
-		###print "[BluetoothDiscovery][discEventCallback] event : %s" % (getEventDesc(event))
-		###print "[BluetoothDiscovery][discEventCallback] data : ", _data
+		# print "[BluetoothDiscovery][discEventCallback] event : %s" % (getEventDesc(event))
+		# print "[BluetoothDiscovery][discEventCallback] data : ", _data
 
 		data = None
 		name = "noname"
@@ -139,7 +139,7 @@ class BluetoothDiscovery(BluetoothTask):
 		elif event == bt_types.BT_EVENT_PAIRING_PASSCODE_REQUIRED:
 			self.updateDescription(_("Type PINCODE on %s to connect, then press OK. Your PINCODE is %s" % (data['name'], self.PINCODE)))
 			self.pincodeRequired = 1
-			#self.updateDescription(_("Type %s on %s to connect, then press Enter or Return." % (data['passcode'], data['name'])))
+			# self.updateDescription(_("Type %s on %s to connect, then press Enter or Return." % (data['passcode'], data['name'])))
 		else:
 			BluetoothTask.handleEvent(self, event, name, data)
 
@@ -175,7 +175,7 @@ class BluetoothDiscovery(BluetoothTask):
 
 		elif self.gbbt.requestPairing(mac):
 			self.updateDescription(_("Pairing %s") % name)
-			#self.pairingCancelTimer.start(self.pairingTime * 1000, True)
+			# self.pairingCancelTimer.start(self.pairingTime * 1000, True)
 			ret = True
 		else:
 			self.updateDescription(_("Pairing %s failed!!") % name)
@@ -197,17 +197,17 @@ class BluetoothDiscovery(BluetoothTask):
 		(mac, profile, name) = args
 		ret = False
 		if self.isPairing():
-			###print "[BluetoothDiscovery] cancelPairing %s" % mac
+			# print "[BluetoothDiscovery] cancelPairing %s" % mac
 			ret = self.gbbt.cancelPairing(mac)
 
 		return ret
 
 	def scanTimerCB(self):
-		#print "scanTimerCB"
+		# print "scanTimerCB"
 		self.addTaskStartScan()
 
 	def addTaskStartScan(self):
-		#print "addTaskStartScan"
+		# print "addTaskStartScan"
 		if self.isTaskEmpty():
 			eventCB = {bt_types.BT_EVENT_SCAN_END: self.onScanFinished}
 			BluetoothTask.addTask(self, BluetoothTask.TASK_START_SCAN, self.startScan, None, None, eventCB)
@@ -216,7 +216,7 @@ class BluetoothDiscovery(BluetoothTask):
 		BluetoothTask.removeTask(self, BluetoothTask.TASK_START_SCAN)
 		if self.isScanning():
 			self.abortScan()
-			#bluetoothTask.addTask(self, BluetoothTask.TASK_CALL_FUNC, self.abortScan, None, None, None)
+			# bluetoothTask.addTask(self, BluetoothTask.TASK_CALL_FUNC, self.abortScan, None, None, None)
 
 	def addTaskPairing(self, mac, profile, name):
 		if self.findTask(BluetoothTask.TASK_EXIT) or self.findTask(BluetoothTask.TASK_START_PAIRING):
@@ -238,7 +238,7 @@ class BluetoothDiscovery(BluetoothTask):
 		BluetoothTask.removeTask(self, BluetoothTask.TASK_START_PAIRING)
 		if self.isPairing():
 			self.cancelPairing(args)
-			#BluetoothTask.addTask(self, BluetoothTask.TASK_CALL_FUNC, self.cancelPairing, mac, args, None)
+			# BluetoothTask.addTask(self, BluetoothTask.TASK_CALL_FUNC, self.cancelPairing, mac, args, None)
 
 	def addTaskDisconnect(self, mac, profile, name):
 		if self.findTask(BluetoothTask.TASK_EXIT) or self.findTask(BluetoothTask.TASK_START_PAIRING):
@@ -374,7 +374,7 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 		self.PINCODE = " "
 
 	def onLayoutFinishCB(self):
-		#print "onLayoutFinishCB"
+		# print "onLayoutFinishCB"
 		if self.ble:
 			self.setTitle(_("Bluetooth Scan (BLE device)"))
 		else:
@@ -471,7 +471,7 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 				return
 
 			mac = cur[2]["bd_addr"]
-			###print "<<<<< removePairedList: %s >>>>>" % mac
+			# print "<<<<< removePairedList: %s >>>>>" % mac
 			self.gbbt.removePairedList(mac)
 
 		if msg:
@@ -522,7 +522,7 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 
 			mac = cur[2]["bd_addr"]
 
-			###print "<<<<< Input PINCODE : %s (mac: %s) >>>>>" % (self.PINCODE, mac)
+			# print "<<<<< Input PINCODE : %s (mac: %s) >>>>>" % (self.PINCODE, mac)
 			self.gbbt.requestSendPincode(mac, self.PINCODE)
 
 	def keyCancel(self):
@@ -539,7 +539,7 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 			self.PINCODE += "0"
 			self.pincodeIndex = self.pincodeIndex + 1
 
-		###print "<<<<< key 0, PINCODE: %s >>>>>" % self.PINCODE
+		# print "<<<<< key 0, PINCODE: %s >>>>>" % self.PINCODE
 		self.updateDescription(_("Type PINCODE to connect, then press OK. Your PINCODE is %s" % (self.PINCODE)))
 
 	def key1(self):
@@ -550,7 +550,7 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 			self.PINCODE += "1"
 			self.pincodeIndex = self.pincodeIndex + 1
 
-		###print "<<<<< key 1, PINCODE: %s >>>>>" % self.PINCODE
+		# print "<<<<< key 1, PINCODE: %s >>>>>" % self.PINCODE
 		self.updateDescription(_("Type PINCODE to connect, then press OK. Your PINCODE is %s" % (self.PINCODE)))
 
 	def key2(self):
@@ -561,7 +561,7 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 			self.PINCODE += "2"
 			self.pincodeIndex = self.pincodeIndex + 1
 
-		###print "<<<<< key 2, PINCODE: %s >>>>>" % self.PINCODE
+		# print "<<<<< key 2, PINCODE: %s >>>>>" % self.PINCODE
 		self.updateDescription(_("Type PINCODE to connect, then press OK. Your PINCODE is %s" % (self.PINCODE)))
 
 	def key3(self):
@@ -572,7 +572,7 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 			self.PINCODE += "3"
 			self.pincodeIndex = self.pincodeIndex + 1
 
-		###print "<<<<< key 3, PINCODE: %s >>>>>" % self.PINCODE
+		# print "<<<<< key 3, PINCODE: %s >>>>>" % self.PINCODE
 		self.updateDescription(_("Type PINCODE to connect, then press OK. Your PINCODE is %s" % (self.PINCODE)))
 
 	def key4(self):
@@ -583,7 +583,7 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 			self.PINCODE += "4"
 			self.pincodeIndex = self.pincodeIndex + 1
 
-		###print "<<<<< key 4, PINCODE: %s >>>>>" % self.PINCODE
+		# print "<<<<< key 4, PINCODE: %s >>>>>" % self.PINCODE
 		self.updateDescription(_("Type PINCODE to connect, then press OK. Your PINCODE is %s" % (self.PINCODE)))
 
 	def key5(self):
@@ -594,7 +594,7 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 			self.PINCODE += "5"
 			self.pincodeIndex = self.pincodeIndex + 1
 
-		###print "<<<<< key 5, PINCODE: %s >>>>>" % self.PINCODE
+		# print "<<<<< key 5, PINCODE: %s >>>>>" % self.PINCODE
 		self.updateDescription(_("Type PINCODE to connect, then press OK. Your PINCODE is %s" % (self.PINCODE)))
 
 	def key6(self):
@@ -605,7 +605,7 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 			self.PINCODE += "6"
 			self.pincodeIndex = self.pincodeIndex + 1
 
-		###print "<<<<< key 6, PINCODE: %s >>>>>" % self.PINCODE
+		# print "<<<<< key 6, PINCODE: %s >>>>>" % self.PINCODE
 		self.updateDescription(_("Type PINCODE to connect, then press OK. Your PINCODE is %s" % (self.PINCODE)))
 
 	def key7(self):
@@ -616,7 +616,7 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 			self.PINCODE += "7"
 			self.pincodeIndex = self.pincodeIndex + 1
 
-		###print "<<<<< key 7, PINCODE: %s >>>>>" % self.PINCODE
+		# print "<<<<< key 7, PINCODE: %s >>>>>" % self.PINCODE
 		self.updateDescription(_("Type PINCODE to connect, then press OK. Your PINCODE is %s" % (self.PINCODE)))
 
 	def key8(self):
@@ -627,7 +627,7 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 			self.PINCODE += "8"
 			self.pincodeIndex = self.pincodeIndex + 1
 
-		###print "<<<<< key 8, PINCODE: %s >>>>>" % self.PINCODE
+		# print "<<<<< key 8, PINCODE: %s >>>>>" % self.PINCODE
 		self.updateDescription(_("Type PINCODE to connect, then press OK. Your PINCODE is %s" % (self.PINCODE)))
 
 	def key9(self):
@@ -638,7 +638,7 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 			self.PINCODE += "9"
 			self.pincodeIndex = self.pincodeIndex + 1
 
-		###print "<<<<< key 9, PINCODE: %s >>>>>" % self.PINCODE
+		# print "<<<<< key 9, PINCODE: %s >>>>>" % self.PINCODE
 		self.updateDescription(_("Type PINCODE to connect, then press OK. Your PINCODE is %s" % (self.PINCODE)))
 
 
@@ -654,8 +654,8 @@ class BluetoothRCUSetup(BluetoothDiscoveryScreen):
 			"gbRcuSetup": self.keyGbRcuSetup,
 		}, -2)
 
-		#Jin
-		#self.autoStart = autoStart
+		# Jin
+		# self.autoStart = autoStart
 		self.autoStart = True
 
 		self.pairingTimer = eTimer()

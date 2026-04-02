@@ -45,9 +45,9 @@ class BluetoothSetupConfig(ConfigListScreen, Screen):
 		self.btaudiodelay = getConfigListEntry(_("Set bluetooth audio delay (msec)"), config.plugins.bluetoothsetup.audiodelay)
 		self.showMsgBoxEntry = getConfigListEntry(_("Show state message on infobar notification"), config.plugins.bluetoothsetup.showMessageBox)
 		self.lastAudioConnEntry = getConfigListEntry(_("Try connect to last audio device on start enable"), config.plugins.bluetoothsetup.lastAudioConnEnable)
-		#self.showBatteryLowEntry = getConfigListEntry(_("Show battery low message on infobar notification"), config.plugins.bluetoothsetup.showBatteryLow)
-		#self.voiceCheckDbEntry = getConfigListEntry(_("Voice Input Strength Value"), config.plugins.bluetoothsetup.voiceCheckDb)
-		#self.voiceCallbackName = getConfigListEntry(_("Choice voice callback"), config.plugins.bluetoothsetup.voiceCallbackName)
+		# self.showBatteryLowEntry = getConfigListEntry(_("Show battery low message on infobar notification"), config.plugins.bluetoothsetup.showBatteryLow)
+		# self.voiceCheckDbEntry = getConfigListEntry(_("Voice Input Strength Value"), config.plugins.bluetoothsetup.voiceCheckDb)
+		# self.voiceCallbackName = getConfigListEntry(_("Choice voice callback"), config.plugins.bluetoothsetup.voiceCallbackName)
 
 		curSkipVer = config.plugins.bluetoothsetup.gbrcuSkipFwVer.value
 		if curSkipVer != 0:
@@ -59,11 +59,11 @@ class BluetoothSetupConfig(ConfigListScreen, Screen):
 		self.list.append(self.btaudiodelay)
 		self.list.append(self.showMsgBoxEntry)
 		self.list.append(self.lastAudioConnEntry)
-		#self.list.append( self.showBatteryLowEntry )
-		#self.list.append( self.voiceCheckDbEntry )
+		# self.list.append( self.showBatteryLowEntry )
+		# self.list.append( self.voiceCheckDbEntry )
 		if self.skipGbRcuUpdateEntry:
 			self.list.append(self.skipGbRcuUpdateEntry)
-		#self.list.append(self.voiceCallbackName)
+		# self.list.append(self.voiceCallbackName)
 
 		self["config"].list = self.list
 		self["config"].l.setList(self.list)

@@ -42,7 +42,7 @@ class VoiceEventHandler:
 	def __init__(self):
 		self.voiceHandlers = []
 		self.textHandlers = []
-		#self.voiceHandlers.append(self.startPlayVoiceTimer)
+		# self.voiceHandlers.append(self.startPlayVoiceTimer)
 
 		self.showVoiceMsgTimer = eTimer()
 		self.showVoiceMsgTimer.callback.append(self.showVoiceMsg)
@@ -237,7 +237,7 @@ class BTAutoAudioConnect:
 			pairedDevices = self.getPairedDevice()
 			if pairedDevices:
 				for (k, v) in pairedDevices.items():
-					#print("bd_addr %s" % v['bd_addr'])
+					# print("bd_addr %s" % v['bd_addr'])
 					if v['bd_addr'] == bd_addr:
 						self.doStartAudioConnectTimer(bd_addr)
 						return
@@ -260,11 +260,11 @@ class BTAutoAudioConnect:
 		self.requestAudioTimer.stop()
 		self.autoAudioMac = bd_addr
 		if not self.isAudioDeviceConnected():
-			###print("[BT] auto audio connect start, %s" % self.autoAudioMac)
+			# print("[BT] auto audio connect start, %s" % self.autoAudioMac)
 			self.requestAudioTimer.start(500, True)
 
 	def doStartAudioConnectCB(self):
-		###print("[BT] request audio connect, %s" % self.autoAudioMac)
+		# print("[BT] request audio connect, %s" % self.autoAudioMac)
 		self.requestAudioTimer.stop()
 		if self.autoAudioMac:
 			self.requestConnect(self.autoAudioMac)
@@ -278,7 +278,7 @@ class BTAutoAudioConnect:
 			if self.autoAudioRetry > 0:
 				self.autoAudioRetry -= 1
 				self.requestAudioTimer.stop()
-				###print("[BT] retry audio connect, %s" % self.autoAudioMac)
+				# print("[BT] retry audio connect, %s" % self.autoAudioMac)
 				self.requestAudioTimer.start(500, True)
 			else:
 				self.autoAudioReset()
@@ -296,18 +296,18 @@ class BTAutoAudioConnect:
 
 		self.autoAudioReset()
 
-		###print("[BT] update Last Audio Connect, %s" % bd_addr)
+		# print("[BT] update Last Audio Connect, %s" % bd_addr)
 		if config.plugins.bluetoothsetup.lastAudioConn.value != bd_addr:
 			config.plugins.bluetoothsetup.lastAudioConn.value = bd_addr
 			config.plugins.bluetoothsetup.lastAudioConn.save()
 
 	def activateBTAudioOut(self, enable):
 		if enable and self.btaudioActivated:
-			###print("[BT] already btaudio activated!")
+			# print("[BT] already btaudio activated!")
 			return
 
 		if not enable and not self.btaudioActivated:
-			###print("[BT] already btaudio inactivated!")
+			# print("[BT] already btaudio inactivated!")
 			return
 
 		self.btaudioActivated = enable
@@ -658,13 +658,13 @@ class PyBluetoothInterface(VoiceEventHandler, BTVolumeControl, BTAutoAudioConnec
 	def setScanTime(self, scanDuration):
 		scanDuration = int(scanDuration)
 		if (scanDuration <= 0) or (scanDuration > 30):
-			###print("[BT] invalid scanDuration")
+			# print("[BT] invalid scanDuration")
 			return
 
 		self.gbbt.setScanTime(scanDuration)
 
 	def eventCallback(self, evType, data):
-		###print("[eventCallback] evType : %s" % str(evType))
+		# print("[eventCallback] evType : %s" % str(evType))
 
 		if self.otaMode:
 			return
@@ -750,7 +750,7 @@ class PyBluetoothInterface(VoiceEventHandler, BTVolumeControl, BTAutoAudioConnec
 				pass
 			elif evType == bt_types.BT_EVENT_READ_BATTERY_LEVEL:
 				if value:
-					###print("[bleEventCallback] get battery level : %d (%s)" % (value, bd_addr)
+					# print("[bleEventCallback] get battery level : %d (%s)" % (value, bd_addr)
 
 					self.batteryLevel = value
 					isBatteryLow = (name == bt_types.BT_GB_RCU_NAME) and (self.batteryLevel < bt_types.BT_BATTERY_LEVEL_LOW)
@@ -794,7 +794,7 @@ class PyBluetoothInterface(VoiceEventHandler, BTVolumeControl, BTAutoAudioConnec
 
 	def updateStatus(self):
 		self.status = self.gbbt.getStatus()
-		###print("[BT] current status : %s" % str(self.status))
+		# print("[BT] current status : %s" % str(self.status))
 
 		for handler in self.pluginStatusHandler:
 			handler(self.status)

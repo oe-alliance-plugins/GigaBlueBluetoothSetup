@@ -19,12 +19,12 @@ from .bt_task import BluetoothTask
 
 OTA_ERROR_SERVICE_DISCOVERY = 0
 OTA_BATTERY_LEVEL = 1
-#OTA_APP_VERSION = 2
+# OTA_APP_VERSION = 2
 OTA_PATCH_VERSION = 3
 OTA_ERROR_READ_BATTERY_LEVEL = 4
 OTA_ERROR_READ_APP_VERSION = 5
 OTA_ERROR_READ_PATCH_VERSION = 6
-#OTA_FILE_APP_VERSION = 7
+# OTA_FILE_APP_VERSION = 7
 OTA_SET_OTA_MODE = 8
 OTA_ERROR_SET_TO_OTA_MODE = 9
 OTA_SCAN_OTA_DEVICE = 10
@@ -165,8 +165,8 @@ class GbRcuOtaUpdate(Screen, HelpableScreen, BluetoothTask):
 
 	def onCloseCB(self):
 		self.gbbt.OTADeInit()
-		#if self.audio_connected:
-		#	self.gbbt.requestConnect(self.audio_connected['bd_addr'])
+		# if self.audio_connected:
+		# self.gbbt.requestConnect(self.audio_connected['bd_addr'])
 
 		self.appendOTAEventCallback(False)
 		self.appendEventCallback(False)
@@ -180,8 +180,8 @@ class GbRcuOtaUpdate(Screen, HelpableScreen, BluetoothTask):
 				self.gbbt.pluginOtaEventHandler.remove(self.otaEventCallback)
 
 	def otaEventCallback(self, event, value):
-		#print "[GbRcuOtaUpdate][otaEventCallback] event : ", event
-		#print "[GbRcuOtaUpdate][otaEventCallback] value : ", value
+		# print "[GbRcuOtaUpdate][otaEventCallback] event : ", event
+		# print "[GbRcuOtaUpdate][otaEventCallback] value : ", value
 
 		if event == OTA_PROGRESS_DATA:  # OTA_PROGRESS_DATA
 			self["text"].setText(_("Updateing %d %%") % value)
@@ -211,7 +211,7 @@ class GbRcuOtaUpdate(Screen, HelpableScreen, BluetoothTask):
 	def disconnectDevices(self):
 		pairedDevices = self.gbbt.getPairedDevice()
 
-		#print "pairedDevices : ", pairedDevices
+		# print "pairedDevices : ", pairedDevices
 
 		if pairedDevices:
 			for (k, v) in pairedDevices.items():
@@ -258,8 +258,8 @@ class GbRcuOtaUpdate(Screen, HelpableScreen, BluetoothTask):
 				self.gbbt.pluginEventHandler.remove(self.eventCallback)
 
 	def eventCallback(self, event, _data):
-		#print "[GbRcuOtaUpdate][eventCallback] event : %s" % (getEventDesc(event))
-		#print "[GbRcuOtaUpdate][eventCallback] data : ", _data
+		# print "[GbRcuOtaUpdate][eventCallback] event : %s" % (getEventDesc(event))
+		# print "[GbRcuOtaUpdate][eventCallback] data : ", _data
 
 		data = None
 		name = "noname"

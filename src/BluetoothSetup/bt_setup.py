@@ -25,7 +25,7 @@ class BluetoothSetup(BluetoothTask):
 		self.events = []
 
 	def appendEventCallback(self, value=True):
-		#print "appendEventCallback"
+		# print "appendEventCallback"
 		if value:
 			if self.eventCallback not in self.gbbt.pluginEventHandler:
 				self.gbbt.pluginEventHandler.append(self.eventCallback)
@@ -34,8 +34,8 @@ class BluetoothSetup(BluetoothTask):
 				self.gbbt.pluginEventHandler.remove(self.eventCallback)
 
 	def eventCallback(self, event, _data):
-		###print("[BluetoothSetup][eventCallback] event : %s" % (getEventDesc(event)))
-		###print("[BluetoothSetup][eventCallback] data : ", _data)
+		# print("[BluetoothSetup][eventCallback] event : %s" % (getEventDesc(event)))
+		# print("[BluetoothSetup][eventCallback] data : ", _data)
 
 		data = None
 		name = "noname"
@@ -118,7 +118,7 @@ class BluetoothSetup(BluetoothTask):
 		eventCB = {
 			bt_types.BT_EVENT_CONNECTED: None,
 			bt_types.BT_EVENT_DISCONNECTED: None,
-			#bt_types.BT_EVENT_LINK_DOWN : None,
+			# bt_types.BT_EVENT_LINK_DOWN : None,
 			bt_types.BT_EVENT_CONNECT_TIMEOUT: self.onConnectTimeout}
 		self.addTask(BluetoothTask.TASK_CONNECT, self.connectDevice, mac, args, eventCB)
 
@@ -354,7 +354,7 @@ class BluetoothSetupScreen(Screen, HelpableScreen, BluetoothSetup):
 				deviceEntry = (name, classOfDevice, status, icon, v)
 				self.deviceList.append(deviceEntry)
 
-		###print("[showPairedList] self.deviceList : ", self.deviceList)
+		# print("[showPairedList] self.deviceList : ", self.deviceList)
 
 		self["deviceList"].setList(self.deviceList)
 
@@ -387,14 +387,14 @@ class BluetoothSetupScreen(Screen, HelpableScreen, BluetoothSetup):
 		self.close()
 
 	def keyRed(self):
-		#print("keyRed")
+		# print("keyRed")
 		if not self.isIdle():
 			return
 
 		self.enableBT()
 
 	def keyGreen(self):
-		#print("keyGreen")
+		# print("keyGreen")
 		if not self.isIdle():
 			return
 
@@ -411,15 +411,15 @@ class BluetoothSetupScreen(Screen, HelpableScreen, BluetoothSetup):
 			name = cur_dev['name']
 			profile = cur_dev['profile']
 
-		####print("[keyGreen] mac : ", mac)
-		####print("[keyGreen] name : ", name)
-		####print("[keyGreen] profile : ", profile)
-		####print("[keyGreen] isConnected : ", isConnected)
+		# print("[keyGreen] mac : ", mac)
+		# print("[keyGreen] name : ", name)
+		# print("[keyGreen] profile : ", profile)
+		# print("[keyGreen] isConnected : ", isConnected)
 
-		###print("[keyGreen] mac : ", mac)
-		###print("[keyGreen] name : ", name)
-		###print("[keyGreen] profile : ", profile)
-		###print("[keyGreen] isConnected : ", isConnected)
+		# print("[keyGreen] mac : ", mac)
+		# print("[keyGreen] name : ", name)
+		# print("[keyGreen] profile : ", profile)
+		# print("[keyGreen] isConnected : ", isConnected)
 
 		if mac is None:
 			return
@@ -436,7 +436,7 @@ class BluetoothSetupScreen(Screen, HelpableScreen, BluetoothSetup):
 				self.addTaskConnect(mac, profile, name)
 
 	def keyYellow(self):
-		#print("keyYellow")
+		# print("keyYellow")
 		if not self.isIdle():
 			return
 
@@ -457,7 +457,7 @@ class BluetoothSetupScreen(Screen, HelpableScreen, BluetoothSetup):
 				self.addTaskRemove(mac, profile, name)
 
 	def keyBlue(self):
-		#print("keyBlue")
+		# print("keyBlue")
 		if not self.isIdle():
 			return
 
@@ -600,7 +600,7 @@ class BluetoothSetupScreen(Screen, HelpableScreen, BluetoothSetup):
 
 		if answer == "scan":
 			self.openBTScan(False)
-#Jin
+# Jin
 		elif answer == "blescan":
 			self.openBTScan(True)
 

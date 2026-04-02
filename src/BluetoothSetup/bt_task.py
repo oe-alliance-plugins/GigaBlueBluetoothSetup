@@ -44,23 +44,23 @@ class BluetoothState:
 		return self.checkState(self.STATE_PAIRING)
 
 	def setIdle(self):
-		###print("setIdle")
+		# print("setIdle")
 		self.setState(self.STATE_NONE)
 
 	def setConnecting(self):
-		###print("setConnecting")
+		# print("setConnecting")
 		self.setState(self.STATE_CONNECTING)
 
 	def setDisconnecting(self):
-		###print("setDisconnecting")
+		# print("setDisconnecting")
 		self.setState(self.STATE_DISCONNECTING)
 
 	def setScanning(self):
-		###print("setScanning")
+		# print("setScanning")
 		self.setState(self.STATE_SCANNING)
 
 	def setPairing(self):
-		###print("setScanning")
+		# print("setScanning")
 		self.setState(self.STATE_PAIRING)
 
 
@@ -104,13 +104,13 @@ class BluetoothTask(BluetoothState):
 
 	def addTask1(self, taskType, callFunc, mac, args, eventCB):
 		task = {"taskType": taskType, "callFunc": callFunc, "mac": mac, "args": args, "eventCB": eventCB}
-		#print("==> addTask1 : ")
-		#self.printTask(task)
-		#print("taskType :", task["taskType"])
-		#print("callFunc :", task["callFunc"])
-		#print("mac :", task["mac"])
-		#print("args :", task["args"])
-		#print("eventCB:", task["eventCB"])
+		# print("==> addTask1 : ")
+		# self.printTask(task)
+		# print("taskType :", task["taskType"])
+		# print("callFunc :", task["callFunc"])
+		# print("mac :", task["mac"])
+		# print("args :", task["args"])
+		# print("eventCB:", task["eventCB"])
 
 		if self.isTaskEmpty1():
 			self.doTask1(task)
@@ -118,8 +118,8 @@ class BluetoothTask(BluetoothState):
 			self.tasks1.append(task)
 
 	def doTask1(self, task):
-		#print("==> doTask1 : ")
-		#self.printTask(task)
+		# print("==> doTask1 : ")
+		# self.printTask(task)
 
 		callFunc = task["callFunc"]
 		args = task["args"]
@@ -134,24 +134,24 @@ class BluetoothTask(BluetoothState):
 
 		# return False
 		if res is False:
-			#print("doTask1 : break")
+			# print("doTask1 : break")
 			self.curTask1 = None
 			self.doNext1()
 
 		# set state and wait for event
 		else:
 			# set state
-			#print("doTask1 : continue")
+			# print("doTask1 : continue")
 			self.tasks1.append(task)
 			self.curTask1 = None
 			self.doNextTmer1.start(self.doNextInterval1, True)
 
 	def doNext1(self):
-		#print("==> doNext1 self.tasks :")
-		#for t in self.tasks1:
-		#	self.printTask(t)
-		#print("==> doNext1 self.curTask :")
-		#self.printTask(self.curTask1)
+		# print("==> doNext1 self.tasks :")
+		# for t in self.tasks1:
+		# self.printTask(t)
+		# print("==> doNext1 self.curTask :")
+		# self.printTask(self.curTask1)
 
 		if self.curTask1:
 			return
@@ -183,13 +183,13 @@ class BluetoothTask(BluetoothState):
 
 	def addTask(self, taskType, callFunc, mac, args, eventCB):
 		task = {"taskType": taskType, "callFunc": callFunc, "mac": mac, "args": args, "eventCB": eventCB}
-		#print("==> addTask : ")
-		#self.printTask(task)
-		#print("taskType :", task["taskType"])
-		#print("callFunc :", task["callFunc"])
-		#print("mac :", task["mac"])
-		#print("args :", task["args"])
-		#print("eventCB:", task["eventCB"])
+		# print("==> addTask : ")
+		# self.printTask(task)
+		# print("taskType :", task["taskType"])
+		# print("callFunc :", task["callFunc"])
+		# print("mac :", task["mac"])
+		# print("args :", task["args"])
+		# print("eventCB:", task["eventCB"])
 
 		if self.isTaskEmpty():
 			self.doTask(task)
@@ -197,8 +197,8 @@ class BluetoothTask(BluetoothState):
 			self.tasks.append(task)
 
 	def doTask(self, task):
-		#print("==> doTask : ")
-		#self.printTask(task)
+		# print("==> doTask : ")
+		# self.printTask(task)
 
 		callFunc = task["callFunc"]
 		args = task["args"]
@@ -217,29 +217,29 @@ class BluetoothTask(BluetoothState):
 
 		# return False
 		if res is False:
-			#print("doTask : False")
+			# print("doTask : False")
 			self.curTask = None
 			self.doNext()
 
 		# do not have to wait for event
 		elif not eventCB:
-			#print("doTask : not eventCB")
+			# print("doTask : not eventCB")
 			self.curTask = None
 			self.doNext()
 
 		# set state and wait for event
 		else:
 			# set state
-			#print("doTask : other status")
+			# print("doTask : other status")
 			self.curTask = task
 			self.updateState(taskType)
 
 	def handleEvent(self, event, name, data):
-#		print("==> handleEvent event : ", event)
-#		print("==> handleEvent name : ", name)
-#		print("==> handleEvent data : ", data)
-#		print("==> handleEvent self.curTask : ")
-#		self.printTask(self.curTask)
+# print("==> handleEvent event : ", event)
+# print("==> handleEvent name : ", name)
+# print("==> handleEvent data : ", data)
+# print("==> handleEvent self.curTask : ")
+# self.printTask(self.curTask)
 
 		if self.curTask is None:
 			return
@@ -261,11 +261,11 @@ class BluetoothTask(BluetoothState):
 				self.doNextTmer.start(self.doNextInterval, True)
 
 	def doNext(self):
-		#print("==> doNext self.tasks :")
-		#for t in self.tasks:
-		#	self.printTask(t)
-		#print("==> doNext self.curTask :")
-		#self.printTask(self.curTask)
+		# print("==> doNext self.tasks :")
+		# for t in self.tasks:
+		# self.printTask(t)
+		# print("==> doNext self.curTask :")
+		# self.printTask(self.curTask)
 
 		if self.curTask:
 			return
