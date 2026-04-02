@@ -15,7 +15,7 @@ class build_trans(Command):
 		pass
 
 	def run(self):
-		s = os.path.join('GigaBlueBluetoothSetup', 'locale')
+		s = os.path.join('BluetoothSetup', 'locale')
 		lang_domains = glob.glob(os.path.join(s, '*.pot'))
 		if len(lang_domains):
 			for lang in os.listdir(s):
