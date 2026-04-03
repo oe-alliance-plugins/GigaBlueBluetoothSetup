@@ -41,7 +41,7 @@ def auto_start_main(reason, **kwargs):
 		try:
 			if pybluetooth_instance:
 				pybluetooth_instance.disable()
-		except:
+		except Exception:
 			pass
 
 

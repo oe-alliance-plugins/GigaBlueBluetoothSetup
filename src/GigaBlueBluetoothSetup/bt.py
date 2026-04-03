@@ -117,7 +117,7 @@ class VoiceEventHandler:
 		for callback in self.findCallbackByName(name):
 			try:
 				callback(bt_types.BT_VOICE_PATH)
-			except:
+			except Exception:
 				pass
 
 	def updateCallbackNameList(self):
@@ -208,7 +208,7 @@ class BTVolumeControl:
 			try:
 				vol = config.audio.volume.value
 				self.setVolume(vol)
-			except:
+			except Exception:
 				self.initVolumeTimer.start(100, True)
 
 	def setVolume(self, vol):
@@ -326,7 +326,7 @@ class BTAutoAudioConnect:
 			else:
 				self.gbbt.stopAudioDevice()
 
-		except:
+		except Exception:
 			print("[BT] set %s failed!" % BT_AUDIO_ONOFF_PROC)
 
 	def setBTAudioDelay(self, updateNow=True):
@@ -348,7 +348,7 @@ class BTAutoAudioConnect:
 				fd = open(BT_AUDIO_DELAY_PROC, 'w')
 				fd.write(data)
 				fd.close()
-			except:
+			except Exception:
 				print("[BT] set %s failed!" % BT_AUDIO_DELAY_PROC)
 
 	def isAudioDeviceConnected(self):
