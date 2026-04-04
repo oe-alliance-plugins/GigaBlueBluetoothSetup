@@ -107,9 +107,9 @@ BT_REQUEST_DISCONNECT = _gbbt.BT_REQUEST_DISCONNECT
 
 class Gb_PyBluetooth(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, Gb_PyBluetooth, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, Gb_PyBluetooth, name, value)  # noqa: E731
     __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, Gb_PyBluetooth, name)
+    __getattr__ = lambda self, name: _swig_getattr(self, Gb_PyBluetooth, name)  # noqa: E731
     __repr__ = _swig_repr
     __swig_setmethods__["bt_status"] = _gbbt.Gb_PyBluetooth_bt_status_set
     __swig_getmethods__["bt_status"] = _gbbt.Gb_PyBluetooth_bt_status_get
@@ -131,7 +131,7 @@ class Gb_PyBluetooth(_object):
         except __builtin__.Exception:
             self.this = this
     __swig_destroy__ = _gbbt.delete_Gb_PyBluetooth
-    __del__ = lambda self: None
+    __del__ = lambda self: None  # noqa: E731
 
     def init(self):
         return _gbbt.Gb_PyBluetooth_init(self)
