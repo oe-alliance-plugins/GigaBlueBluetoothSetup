@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the BluetoothSetup package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: BluetoothSetup\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-03 14:48+0100\n"
+"POT-Creation-Date: 2026-04-08 10:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,343 +17,439 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: ../bt_setup.py:147
 msgid ""
 "\n"
 "Please repair Gb RCU. (by AUDIO+MENU)"
 msgstr ""
 
+#: ../bt_scan.py:649
 msgid " "
 msgstr ""
 
+#: ../OTAUpdate.py:201
 #, python-format
 msgid "%d event"
 msgstr ""
 
+#: ../OTAUpdate.py:199
 #, python-format
 msgid "%s"
 msgstr ""
 
+#: ../bt_scan.py:59
 #, python-format
 msgid "%s Pairing fail"
 msgstr ""
 
+#: ../bt.py:718 ../bt_scan.py:63 ../bt_setup.py:59
 #, python-format
 msgid "%s is connected."
 msgstr ""
 
+#: ../OTAUpdate.py:282 ../bt.py:720 ../bt_scan.py:62 ../bt_setup.py:61
 #, python-format
 msgid "%s is disconnected."
 msgstr ""
 
+#: ../bt_scan.py:676 ../bt_scan.py:753
 #, python-format
 msgid "%s is not found."
 msgstr ""
 
+#: ../bt_scan.py:58
 #, python-format
 msgid "%s is paired."
 msgstr ""
 
+#: ../bt.py:528
 msgid ""
 "1. Move to Bluetooth Setup Options.\n"
 "(press MENU key in BluetoothSetup)\n"
 msgstr ""
 
+#: ../bt.py:529
 msgid "2. Change \"Skip firmware update of GB-BLE-RCU\" option to \"no\"\n"
 msgstr ""
 
+#: ../bt.py:530
 msgid ""
 "3. Reconnect the GB-BLE-RCU.\n"
 "\n"
 msgstr ""
 
+#: ../bt_setup.py:63
 msgid "BT dongle has been inserted."
 msgstr ""
 
+#: ../bt_setup.py:65
 msgid "BT dongle has been removed."
 msgstr ""
 
+#: ../bt.py:427
 #, python-format
 msgid "Battery is low. Suggest to prepare replacement batteries for using properly %s."
 msgstr ""
 
+#: ../OTAUpdate.py:123
 #, python-format
 msgid "Battery level for OTA : %s"
 msgstr ""
 
+#: ../bt_scan.py:381
 msgid "Bluetooth Scan"
 msgstr ""
 
+#: ../bt_scan.py:379
 msgid "Bluetooth Scan (BLE device)"
 msgstr ""
 
+#: ../bt_setup.py:242 ../plugin.py:51 ../plugin.py:65
 msgid "Bluetooth Setup"
 msgstr ""
 
+#: ../bt_config.py:41
 msgid "Bluetooth Setup Options"
 msgstr ""
 
+#: ../plugin.py:64
 msgid "BluetoothSetup"
 msgstr ""
 
+#: ../bt_scan.py:60
 #, python-format
 msgid "Can't communicate with %s"
 msgstr ""
 
+#: ../bt_setup.py:145
 #, python-format
 msgid "Can't communicate with %s."
 msgstr ""
 
+#: ../bt_config.py:32
 msgid "Cancel"
 msgstr ""
 
+#: ../bt_scan.py:447 ../bt_setup.py:495
 msgid "Connect"
 msgstr ""
 
+#: ../bt_setup.py:211 ../bt_setup.py:214
 msgid "Connect/Disconnect selected device"
 msgstr ""
 
+#: ../bt_setup.py:79
 #, python-format
 msgid ""
 "Connection failed.\n"
 "Another audio device is connected. (%s)"
 msgstr ""
 
+#: ../OTAUpdate.py:124
 #, python-format
 msgid "Current FW version : %d"
 msgstr ""
 
+#: ../bt.py:509
 #, python-format
 msgid ""
 "Current FW version : %d\n"
 "New FW version : %d"
 msgstr ""
 
+#: ../bt_setup.py:372
 msgid "Device is disabling..."
 msgstr ""
 
+#: ../bt_setup.py:512
 msgid "Device is enabled."
 msgstr ""
 
+#: ../bt_setup.py:374
 msgid "Device is enabling..."
 msgstr ""
 
+#: ../bt_setup.py:490
 msgid "Disable"
 msgstr ""
 
+#: ../bt_setup.py:493
 msgid "Disconnect"
 msgstr ""
 
+#: ../bt_scan.py:192
 #, python-format
 msgid "Disconnect %s failed!!"
 msgstr ""
 
+#: ../bt_scan.py:189
 #, python-format
 msgid "Disconnecting %s"
 msgstr ""
 
+#: ../bt_setup.py:202 ../bt_setup.py:504
 msgid "Enable"
 msgstr ""
 
+#: ../bt_setup.py:213
 msgid "Enable/Disable bluetooth"
 msgstr ""
 
+#: ../bt_scan.py:340
 msgid "Exit"
 msgstr ""
 
+#: ../bt_setup.py:212
 msgid "Exit bluetooth setup"
 msgstr ""
 
+#: ../bt.py:519
 msgid "GB-BLE-RCU is disconnected. Please connect and select again."
 msgstr ""
 
+#: ../bt_scan.py:680
 msgid "Gb Bluetooth RCU Setup"
 msgstr ""
 
+#: ../bt.py:527
 msgid ""
 "If you want to update this firmware version, follow belows.\n"
 "\n"
 msgstr ""
 
+#: ../bt_setup.py:207
 msgid "MENU"
 msgstr ""
 
+#: ../OTAUpdate.py:125
 #, python-format
 msgid "New FW version : %d"
 msgstr ""
 
+#: ../bt.py:507
 msgid ""
 "New firmware detected for GB-BLE-RCU.\n"
 "\n"
 msgstr ""
 
+#: ../bt_scan.py:270
 msgid "No nearby bluetooth devices were found."
 msgstr ""
 
+#: ../OTAUpdate.py:162
 msgid ""
 "Not enough battery level for OTA update.\n"
 "Press exit and change battery of GB-BLE-RCU."
 msgstr ""
 
+#: ../OTAUpdate.py:194
 #, python-format
 msgid ""
 "OTA Failed.\n"
 "%s is disconnected."
 msgstr ""
 
+#: ../bt_config.py:33
 msgid "Ok"
 msgstr ""
 
+#: ../bt_scan.py:177 ../bt_scan.py:746
 #, python-format
 msgid "Pairing %s"
 msgstr ""
 
+#: ../bt_scan.py:181
 #, python-format
 msgid "Pairing %s failed!!"
 msgstr ""
 
+#: ../bt_scan.py:174
 #, python-format
 msgid ""
 "Pairing Failed.\n"
 "Another audio device is connected. (%s)"
 msgstr ""
 
+#: ../bt.py:188
 msgid "Playing Voice data..."
 msgstr ""
 
+#: ../bt_setup.py:534
 msgid ""
 "Please enable bluetooth \n"
 "before pairing the GB-BLE-RCU."
 msgstr ""
 
+#: ../bt_setup.py:596
 msgid "Please select scan mode."
 msgstr ""
 
+#: ../bt_scan.py:684
 msgid ""
 "Press and hold the buttons <MENU+AUDIO>\n"
 " for five seconds to start."
 msgstr ""
 
+#: ../bt_scan.py:268
 msgid "Press green key to connect device."
 msgstr ""
 
+#: ../bt_setup.py:514
 msgid "Press red key to enable bluetooth."
 msgstr ""
 
+#: ../bt.py:88
 msgid "Put your voice close to the remote control..."
 msgstr ""
 
+#: ../bt.py:510
 msgid "Remind Me later"
 msgstr ""
 
+#: ../bt_setup.py:496
 msgid "Remove"
 msgstr ""
 
+#: ../bt_setup.py:215
 msgid "Remove selected device"
 msgstr ""
 
+#: ../bt_setup.py:547
 msgid "Removing GB-BLE-RCU..."
 msgstr ""
 
+#: ../bt_setup.py:205 ../bt_setup.py:501
 msgid "Scan"
 msgstr ""
 
+#: ../bt_setup.py:591
 msgid "Scan and setup Bluetooth RCU"
 msgstr ""
 
+#: ../bt_scan.py:160
 msgid "Scan failed! try again."
 msgstr ""
 
+#: ../bt_scan.py:704
 msgid ""
 "Scan failed. Please try again GB BLE RCU setup.\n"
 "(AUDIO+MENU buttons)"
 msgstr ""
 
+#: ../bt_setup.py:592
 msgid "Scan other bluetooth 3.0 device (A2DP, HID)"
 msgstr ""
 
+#: ../bt_scan.py:666
 msgid "Scanning GB BLE RCU"
 msgstr ""
 
+#: ../bt_scan.py:37
 msgid "Scanning bluetooth devices"
 msgstr ""
 
+#: ../bt_config.py:45
 msgid "Set bluetooth audio delay (msec)"
 msgstr ""
 
+#: ../bt_setup.py:217
 msgid "Setup bluetooth options"
 msgstr ""
 
+#: ../bt_config.py:46
 msgid "Show state message on infobar notification"
 msgstr ""
 
+#: ../bt_config.py:54
 #, python-format
 msgid "Skip firmware update of GB-BLE-RCU (version : %d)"
 msgstr ""
 
+#: ../bt.py:510
 msgid "Skip this version"
 msgstr ""
 
+#: ../bt_setup.py:216
 msgid "Start Scan / Setup GB BLE RCU"
 msgstr ""
 
+#: ../bt_scan.py:438
 msgid "Start scan"
 msgstr ""
 
+#: ../OTAUpdate.py:114 ../OTAUpdate.py:246 ../bt_scan.py:366 ../bt_setup.py:224
 msgid "Starting..."
 msgstr ""
 
+#: ../bt_scan.py:441
 msgid "Stop scan"
 msgstr ""
 
+#: ../bt.py:606
 msgid "The BT dongle has been removed. It takes 10 seconds from when the BT dongle is removed until the remote control operates in IR mode."
 msgstr ""
 
+#: ../bt.py:111
 msgid "There is no voice input."
 msgstr ""
 
+#: ../bt_config.py:47
 msgid "Try connect to last audio device on start enable"
 msgstr ""
 
+#: ../bt_scan.py:140
 #, python-format
 msgid "Type PINCODE on %s to connect, then press OK. Your PINCODE is %s"
 msgstr ""
 
+#: ../bt_scan.py:543 ../bt_scan.py:554 ../bt_scan.py:565 ../bt_scan.py:576
+#: ../bt_scan.py:587 ../bt_scan.py:598 ../bt_scan.py:609 ../bt_scan.py:620
+#: ../bt_scan.py:631 ../bt_scan.py:642
 #, python-format
 msgid "Type PINCODE to connect, then press OK. Your PINCODE is %s"
 msgstr ""
 
+#: ../OTAUpdate.py:187
 #, python-format
 msgid "Updateing %d %%"
 msgstr ""
 
+#: ../bt.py:510
 msgid "Upgrade now"
 msgstr ""
 
+#: ../bt.py:508
 msgid ""
 "While the update is progress, RCU can not be used and other bluetooth device must be disconnected.\n"
 "\n"
 msgstr ""
 
+#: ../bt_scan.py:61
 #, python-format
 msgid "Wrong pin number for %s. Please try again and check pin number."
 msgstr ""
 
+#: ../bt_setup.py:88
 #, python-format
 msgid "connect to %s failed!!"
 msgstr ""
 
+#: ../bt_setup.py:85
 #, python-format
 msgid "connecting %s"
 msgstr ""
 
+#: ../OTAUpdate.py:232 ../bt_setup.py:100
 #, python-format
 msgid "disconnect to %s failed!!"
 msgstr ""
 
+#: ../OTAUpdate.py:230 ../bt_setup.py:98
 #, python-format
 msgid "disconnecting %s"
 msgstr ""
 
+#: ../bt_setup.py:112
 #, python-format
 msgid "remove %s failed!!"
 msgstr ""
