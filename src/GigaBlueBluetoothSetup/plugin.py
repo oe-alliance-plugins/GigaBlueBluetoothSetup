@@ -40,8 +40,11 @@ def auto_start_main(reason, **kwargs):
 	else:  # when remove plugins
 		try:
 			if pybluetooth_instance:
-				pybluetooth_instance.disable()
-		except Exception:
+				# The native Bluetooth service owns BSA independently from
+				# Enigma2. Detach only the local timers on E2 shutdown so HID
+				# and audio links survive an E2 restart.
+				pybluetooth_instance.detach()
+		except:
 			pass
 
 

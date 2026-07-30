@@ -29,6 +29,10 @@ class BluetoothDiscovery(BluetoothTask):
 		self.scanTimer = eTimer()
 		self.scanTimer.callback.append(self.scanTimerCB)
 
+		self.scanResultsTimer = eTimer()
+		self.scanResultsTimer.callback.append(self.scanResultsTimerCB)
+		self.scanResultsInterval = 250
+
 		self.scanningTimer = eTimer()
 		self.scanningTimer.callback.append(self.showScanning)
 		self.scanningShowValue = 1
@@ -44,9 +48,9 @@ class BluetoothDiscovery(BluetoothTask):
 		self.scanAbortTimer = eTimer()
 		self.scanAbortTimer.callback.append(self.addTaskAbortScan)
 
-		# self.pairingTime = 15
-		# self.pairingCancelTimer = eTimer()
-		# self.pairingCancelTimer.callback.append(self.pairingCancelTimerCB)
+		self.pairingTime = 15
+		self.pairingCancelTimer = eTimer()
+		self.pairingCancelTimer.callback.append(self.pairingCancelTimerCB)
 
 		self.eventTimer = eTimer()
 		self.eventTimer.callback.append(self.handleEvents)
@@ -66,12 +70,17 @@ class BluetoothDiscovery(BluetoothTask):
 		self.pairingFailed = 0
 
 	def appendEventCallback(self, value=True):
+		handlers = (
+			self.gbbt.pluginBleEventHandler
+			if self.ble
+			else self.gbbt.pluginEventHandler
+		)
 		if value:
-			if self.discEventCallback not in self.gbbt.pluginEventHandler:
-				self.gbbt.pluginEventHandler.append(self.discEventCallback)
+			if self.discEventCallback not in handlers:
+				handlers.append(self.discEventCallback)
 		else:
-			if self.discEventCallback in self.gbbt.pluginEventHandler:
-				self.gbbt.pluginEventHandler.remove(self.discEventCallback)
+			if self.discEventCallback in handlers:
+				handlers.remove(self.discEventCallback)
 
 	def initialStart(self):
 		# clear scan list
@@ -80,9 +89,11 @@ class BluetoothDiscovery(BluetoothTask):
 		self.addTaskStartScan()
 
 	def deInit(self):
+		self.scanTimer.stop()
+		self.scanResultsTimer.stop()
 		self.scanningTimer.stop()
 		self.scanAbortTimer.stop()
-		# self.pairingCancelTimer.stop()
+		self.pairingCancelTimer.stop()
 		self.eventTimer.stop()
 
 		self.appendEventCallback(False)
@@ -139,6 +150,7 @@ class BluetoothDiscovery(BluetoothTask):
 		elif event == bt_types.BT_EVENT_PAIRING_PASSCODE_REQUIRED:
 			self.updateDescription(_("Type PINCODE on %s to connect, then press OK. Your PINCODE is %s" % (data['name'], self.PINCODE)))
 			self.pincodeRequired = 1
+			self.pairingCancelTimer.start(30000, True)
 			# self.updateDescription(_("Type %s on %s to connect, then press Enter or Return." % (data['passcode'], data['name'])))
 		else:
 			BluetoothTask.handleEvent(self, event, name, data)
@@ -155,6 +167,7 @@ class BluetoothDiscovery(BluetoothTask):
 		ret = self.gbbt.startScan(self.ble)
 		if ret:
 			self.scanAbortTimer.start(int(config.plugins.bluetoothsetup.scanTime.value) * 1000, True)
+			self.scanResultsTimer.start(self.scanResultsInterval)
 			self.displayScanMsgStart()
 		else:
 			text = _("Scan failed! try again.")
@@ -163,6 +176,7 @@ class BluetoothDiscovery(BluetoothTask):
 		return ret
 
 	def abortScan(self):
+		self.scanResultsTimer.stop()
 		if self.isScanning():
 			self.gbbt.abortScan()
 
@@ -174,8 +188,10 @@ class BluetoothDiscovery(BluetoothTask):
 			self.updateDescription(_("Pairing Failed.\nAnother audio device is connected. (%s)") % audio_connected['name'])
 
 		elif self.gbbt.requestPairing(mac):
-			self.updateDescription(_("Pairing %s") % name)
-			# self.pairingCancelTimer.start(self.pairingTime * 1000, True)
+			self.scanTimer.stop()
+			self.scanResultsTimer.stop()
+			self.updateDescription(_("Pairing %s (%s)") % (name, mac))
+			self.pairingCancelTimer.start(self.pairingTime * 1000, True)
 			ret = True
 		else:
 			self.updateDescription(_("Pairing %s failed!!") % name)
@@ -206,6 +222,31 @@ class BluetoothDiscovery(BluetoothTask):
 		# print "scanTimerCB"
 		self.addTaskStartScan()
 
+	def scanResultsTimerCB(self):
+		if not self.isScanning():
+			self.scanResultsTimer.stop()
+			return
+
+		self.updateDeviceList()
+		self.onLiveScanResults()
+		self.updateKeyDesc()
+
+	def onLiveScanResults(self):
+		pass
+
+	def pairingCancelTimerCB(self):
+		task = self.curTask
+		if not task or task["taskType"] != BluetoothTask.TASK_START_PAIRING:
+			return
+
+		(mac, profile, name) = task["args"]
+		self.gbbt.cancelPairing(mac)
+		self.curTask = None
+		self.setIdle()
+		self.pairingFailed = 1
+		self.updateDescription(_("Pairing %s (%s) timed out. Start scan again.") % (name, mac))
+		self.doNextTmer.start(self.doNextInterval, True)
+
 	def addTaskStartScan(self):
 		# print "addTaskStartScan"
 		if self.isTaskEmpty():
@@ -219,8 +260,13 @@ class BluetoothDiscovery(BluetoothTask):
 			# bluetoothTask.addTask(self, BluetoothTask.TASK_CALL_FUNC, self.abortScan, None, None, None)
 
 	def addTaskPairing(self, mac, profile, name):
-		if self.findTask(BluetoothTask.TASK_EXIT) or self.findTask(BluetoothTask.TASK_START_PAIRING):
+		if self.findTask(BluetoothTask.TASK_EXIT):
 			return
+
+		# While scan cancellation is pending, the user can still move to a
+		# newly discovered row.  The most recent visible selection must replace
+		# an older queued target instead of silently pairing the wrong device.
+		self.removeTask(BluetoothTask.TASK_START_PAIRING)
 
 		if self.isScanning():
 			self.addTaskAbortScan()
@@ -245,7 +291,9 @@ class BluetoothDiscovery(BluetoothTask):
 			return
 
 		args = (mac, profile, name)
-		eventCB = {bt_types.BT_EVENT_LINK_DOWN: self.onDisconnected}
+		# A normal per-device disconnect is delivered as BT_EVENT_DISCONNECTED.
+		# BT_EVENT_LINK_DOWN is a backend failure without a device address.
+		eventCB = {bt_types.BT_EVENT_DISCONNECTED: self.onDisconnected}
 		self.addTask(BluetoothTask.TASK_DISCONNECT, self.disconnectDevice, mac, args, eventCB)
 
 	def addTaskExit(self):
@@ -256,6 +304,7 @@ class BluetoothDiscovery(BluetoothTask):
 		self.addTask(BluetoothTask.TASK_EXIT, self.doExit(), None, None, None)
 
 	def onScanFinished(self, event, args):
+		self.scanResultsTimer.stop()
 		# stop scanning message
 		self.scanningTimer.stop()
 		self.updateDeviceList()
@@ -270,11 +319,13 @@ class BluetoothDiscovery(BluetoothTask):
 				self.updateDescription(_("No nearby bluetooth devices were found."))
 
 	def onPairingSuccess(self, event, args):
+		self.pairingCancelTimer.stop()
 		if event in self.descriptionList:
 			(mac, profile, name) = args
 			self.doExit(self.descriptionList[event] % name)
 
 	def onPairingFailed(self, event, args):
+		self.pairingCancelTimer.stop()
 		if event in self.descriptionList:
 			(mac, profile, name) = args
 			self.updateDescription(self.descriptionList[event] % name)
@@ -386,6 +437,14 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 		self.deInit()
 
 	def updateDeviceList(self):
+		# Discovery updates can arrive while the user moves through the list.
+		# Keep the selected device stable instead of letting setList() move the
+		# cursor to another row just before Connect is pressed.
+		selected_mac = None
+		cur = self["deviceList"].getCurrent()
+		if cur:
+			selected_mac = cur[2].get("bd_addr")
+
 		self.deviceList = []
 		discoverd_devices = self.getDiscDevice()
 		if discoverd_devices:
@@ -426,6 +485,11 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 				self.deviceList.append(deviceEntry)
 
 		self["deviceList"].setList(self.deviceList)
+		if selected_mac:
+			for index, device in enumerate(self.deviceList):
+				if device[2].get("bd_addr") == selected_mac:
+					self["deviceList"].setIndex(index)
+					break
 
 	def updateKeyDesc(self):
 		key_blue_text = " "
@@ -490,6 +554,7 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 		mac = cur[2]["bd_addr"]
 		profile = cur[2]["profile"]
 		name = cur[2]["name"]
+		self.updateDescription(_("Selected %s (%s)") % (name or "NONAME", mac))
 
 		if isAudioProfile(profile):
 			audio_connected = self.gbbt.getAudioDeviceConnected()
@@ -644,7 +709,9 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 
 class BluetoothRCUSetup(BluetoothDiscoveryScreen):
 	def __init__(self, session, autoStart=True):
-		BluetoothDiscoveryScreen.__init__(self, session)
+		# The native core reports BLE scan and pairing events through the BLE
+		# callback queue. Register this screen on that queue as well.
+		BluetoothDiscoveryScreen.__init__(self, session, ble=True)
 
 		self["key_red"] = Label(_(" "))
 		self["shortcuts"] = ActionMap(["BluetoothSetupActions"],
@@ -662,6 +729,7 @@ class BluetoothRCUSetup(BluetoothDiscoveryScreen):
 		self.pairingTimer.callback.append(self.pairingTimerCB)
 		self.MaxscanTime = 10  # sec
 		self.scanRetry = 3
+		self.gbRcuPairingInfo = []
 
 		self.scanningText = _("Scanning GB BLE RCU")
 
@@ -698,6 +766,7 @@ class BluetoothRCUSetup(BluetoothDiscoveryScreen):
 		ret = self.gbbt.startScan(True)
 		if ret:
 			self.scanAbortTimer.start(self.MaxscanTime * 1000, True)
+			self.scanResultsTimer.start(self.scanResultsInterval)
 			self.displayScanMsgStart()
 
 		else:
@@ -711,7 +780,7 @@ class BluetoothRCUSetup(BluetoothDiscoveryScreen):
 		discoverd_devices = self.getDiscDevice()
 		if discoverd_devices:
 			for (k, v) in discoverd_devices.items():
-				if v["name"] != bt_types.BT_GB_RCU_NAME:
+				if not bt_types.isHidDevice(v):
 					continue
 
 				device_info = v.copy()
@@ -729,14 +798,21 @@ class BluetoothRCUSetup(BluetoothDiscoveryScreen):
 	def getGbRCUInfo(self):
 		gbRcuDevInfo = []
 		for d in self.deviceList:
-			if d[2]['name'] == bt_types.BT_GB_RCU_NAME:
-				_mac = d[2]['bd_addr']
-				_name = d[2]['name']
-				_profile = d[2]['profile']
-				gbRcuDevInfo = (_mac, _name, _profile)
-				break
+			_mac = d[2]['bd_addr']
+			_name = d[2]['name']
+			_profile = d[2]['profile']
+			gbRcuDevInfo = (_mac, _name, _profile)
+			break
 
 		return gbRcuDevInfo
+
+	def onLiveScanResults(self):
+		self.gbRcuPairingInfo = self.getGbRCUInfo()
+		if self.gbRcuPairingInfo and self.isScanning():
+			# The RCU pairing advertisement is short. End discovery as soon as
+			# a HID candidate is visible so pairing starts inside that window.
+			self.scanAbortTimer.stop()
+			self.addTaskAbortScan()
 
 	def onScanFinished(self, event, args):
 		self.scanningTimer.stop()
@@ -764,5 +840,5 @@ class BluetoothRCUSetup(BluetoothDiscoveryScreen):
 			self.doExit(self.descriptionList[event] % name)
 
 	def onDeviceAdded(self, event, name, data):
-		if name == bt_types.BT_GB_RCU_NAME:
+		if bt_types.isHidDevice(data):
 			self.scanAbortTimer.start(10, True)

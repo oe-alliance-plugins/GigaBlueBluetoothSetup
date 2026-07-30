@@ -26,12 +26,18 @@ class BluetoothSetup(BluetoothTask):
 
 	def appendEventCallback(self, value=True):
 		# print "appendEventCallback"
+		handler_lists = (
+			self.gbbt.pluginEventHandler,
+			self.gbbt.pluginBleEventHandler,
+		)
 		if value:
-			if self.eventCallback not in self.gbbt.pluginEventHandler:
-				self.gbbt.pluginEventHandler.append(self.eventCallback)
+			for handlers in handler_lists:
+				if self.eventCallback not in handlers:
+					handlers.append(self.eventCallback)
 		else:
-			if self.eventCallback in self.gbbt.pluginEventHandler:
-				self.gbbt.pluginEventHandler.remove(self.eventCallback)
+			for handlers in handler_lists:
+				if self.eventCallback in handlers:
+					handlers.remove(self.eventCallback)
 
 	def eventCallback(self, event, _data):
 		# print("[BluetoothSetup][eventCallback] event : %s" % (getEventDesc(event)))
@@ -124,7 +130,10 @@ class BluetoothSetup(BluetoothTask):
 
 	def addTaskDisconnect(self, mac, profile, name):
 		args = (mac, profile, name)
-		eventCB = {bt_types.BT_EVENT_LINK_DOWN: None}
+		# A normal per-device disconnect is delivered as BT_EVENT_DISCONNECTED.
+		# BT_EVENT_LINK_DOWN means that the NetApp backend itself died and has
+		# no device address, so waiting for it leaves the UI stuck.
+		eventCB = {bt_types.BT_EVENT_DISCONNECTED: None}
 		self.addTask(BluetoothTask.TASK_DISCONNECT, self.disconnectDevice, mac, args, eventCB)
 
 	def addTaskRemove(self, mac, profile, name):
@@ -577,7 +586,7 @@ class BluetoothSetupScreen(Screen, HelpableScreen, BluetoothSetup):
 		_profile = None
 		_isConnected = False
 		for d in self.deviceList:
-			if d[4]['name'] == bt_types.BT_GB_RCU_NAME:
+			if d[4]['profile'] == bt_types.BT_PROFILE_GB_RC:
 				_mac = d[4]['bd_addr']
 				_name = d[4]['name']
 				_profile = d[4]['profile']

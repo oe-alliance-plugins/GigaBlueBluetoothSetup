@@ -57,6 +57,9 @@ BT_PROFILE_SPEAKER = 7
 BT_PROFILE_GATT_UNKNOWN = 8
 BT_PROFILE_GATT_HID = 9
 
+BT_SERVICE_HID = 0x0001
+BT_SERVICE_BLE_HID = 0x0100
+
 BT_BATTERY_LEVEL_OTA_TH = 60
 BT_BATTERY_LEVEL_LOW = 45 + 3
 
@@ -68,6 +71,27 @@ BT_FIRMWARE_FILEPATH = resolveFilename(SCOPE_PLUGINS, "SystemPlugins/BluetoothSe
 
 def isAudioProfile(profile):
 	return profile in (BT_PROFILE_HEADPHONE, BT_PROFILE_SPEAKER)
+
+
+def isHidDevice(device):
+	profile = device.get("profile", 0)
+	service_mask = device.get("serviceMask", 0)
+	name = device.get("name", "").strip().lower()
+	if name.startswith("gigablue"):
+		# GigaBlue BLE RCUs advertise their stable product name before the
+		# HID-over-GATT service discovery has completed.
+		return True
+	if profile == BT_PROFILE_GB_RC:
+		# NetApp identifies the known GigaBlue RCU by name during discovery,
+		# before its BLE HID attributes are available in the device database.
+		return True
+	return profile in (
+		BT_PROFILE_HID_UNKNOWN,
+		BT_PROFILE_KEYBOARD,
+		BT_PROFILE_MOUSE,
+		BT_PROFILE_GATT_UNKNOWN,
+		BT_PROFILE_GATT_HID,
+	) and bool(service_mask & (BT_SERVICE_HID | BT_SERVICE_BLE_HID))
 
 
 BT_GB_RCU_NAME = "GiGaBlue"

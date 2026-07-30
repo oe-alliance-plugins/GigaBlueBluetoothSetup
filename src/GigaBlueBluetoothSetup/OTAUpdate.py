@@ -4,7 +4,7 @@ from Screens.Screen import Screen
 from Screens.HelpMenu import HelpableScreen
 
 # Generic
-#from Tools.Directories import *
+from Tools.Directories import *
 
 # GUI (Components)
 from Components.ActionMap import ActionMap

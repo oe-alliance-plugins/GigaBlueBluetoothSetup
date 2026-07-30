@@ -31,6 +31,10 @@ class BluetoothSetupConfig(ConfigListScreen, Screen):
 		ConfigListScreen.__init__(self, self.list, session=self.session)
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText(_("Ok"))
+		# Current Enigma2 skins may provide a common setup footnote widget.
+		# Keep the source available even though the plugin's built-in skin does
+		# not render it.
+		self["footnote"] = StaticText("")
 
 		self.skipGbRcuUpdateConfig = ConfigYesNo(default=True)
 		self.skipGbRcuUpdateEntry = None
