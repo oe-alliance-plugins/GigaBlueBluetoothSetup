@@ -233,7 +233,7 @@ class VoiceEventHandler:
 		for callback in self.findCallbackByName(name):
 			try:
 				callback(bt_types.BT_VOICE_PATH)
-			except:
+			except Exception:
 				pass
 
 	def updateCallbackNameList(self):
@@ -324,7 +324,7 @@ class BTVolumeControl:
 			try:
 				vol = config.audio.volume.value
 				self.setVolume(vol)
-			except:
+			except Exception:
 				self.initVolumeTimer.start(100, True)
 
 	def setVolume(self, vol):
@@ -455,7 +455,7 @@ class BTAutoAudioConnect:
 			else:
 				self.gbbt.stopAudioDevice()
 
-		except:
+		except Exception:
 			print("[BT] set %s failed!" % BT_AUDIO_ONOFF_PROC)
 
 	def setBTAudioDelay(self, updateNow=True):
@@ -473,11 +473,10 @@ class BTAutoAudioConnect:
 
 		if self.btaudioActivated or updateNow:
 			try:
-				global BT_AUDIO_DELAY_PROC
 				fd = open(BT_AUDIO_DELAY_PROC, 'w')
 				fd.write(data)
 				fd.close()
-			except:
+			except OSError:
 				print("[BT] set %s failed!" % BT_AUDIO_DELAY_PROC)
 
 	def isAudioDeviceConnected(self):
@@ -999,7 +998,7 @@ class PyBluetoothInterface(VoiceEventHandler, BTVolumeControl, BTAutoAudioConnec
 		'''
 
 		bd_addr = data.get("bd_addr", None)
-		name = data.get("name", bd_addr)
+		name = data.get("name", bd_addr)  # noqa F841
 		value = data.get("value", None)
 
 		try:

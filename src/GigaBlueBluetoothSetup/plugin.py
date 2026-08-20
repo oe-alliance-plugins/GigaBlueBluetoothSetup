@@ -44,7 +44,7 @@ def auto_start_main(reason, **kwargs):
 				# Enigma2. Detach only the local timers on E2 shutdown so HID
 				# and audio links survive an E2 restart.
 				pybluetooth_instance.detach()
-		except:
+		except Exception:
 			pass
 
 

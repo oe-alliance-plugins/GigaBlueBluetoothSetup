@@ -122,9 +122,9 @@ class BluetoothTask(BluetoothState):
 		# self.printTask(task)
 
 		callFunc = task["callFunc"]
-		args = task["args"]
-		eventCB = task["eventCB"]
-		taskType = task["taskType"]
+		args = task["args"]  # noqa F841
+		eventCB = task["eventCB"]  # noqa F841
+		taskType = task["taskType"]  # noqa F841
 
 		if callFunc is None:
 			return
