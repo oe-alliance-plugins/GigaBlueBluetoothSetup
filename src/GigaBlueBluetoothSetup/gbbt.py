@@ -127,7 +127,7 @@ def _load_library():
 		if not os.path.exists(candidate):
 			continue
 		try:
-			return ctypes.CDLL(candidate, mode=ctypes.RTLD_GLOBAL)
+			return ctypes.CDLL(candidate)
 		except OSError as error:
 			errors.append("%s: %s" % (candidate, error))
 
