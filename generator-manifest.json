@@ -10,7 +10,7 @@
   "package_name": "enigma2-plugin-systemplugins-bluetoothsetup-giga-blue-bluetooth-setup",
   "plugin_src_rel": "GigaBlueBluetoothSetup",
   "python_package": "GigaBlueBluetoothSetup",
-  "rdepends_recipe": "",
+  "rdepends_recipe": "gb-bluetooth-util-${MACHINE}",
   "replaces": "",
   "repo_name": "GigaBlueBluetoothSetup",
   "rrecommends": "",

@@ -17,6 +17,7 @@ class BluetoothDiscovery(BluetoothTask):
 	def __init__(self, ble):
 		BluetoothTask.__init__(self)
 		self.deviceList = []
+		self.discoveredDeviceCache = {}
 
 		self.ble = ble
 
@@ -85,6 +86,7 @@ class BluetoothDiscovery(BluetoothTask):
 	def initialStart(self):
 		# clear scan list
 		self.gbbt.resetScan()
+		self.discoveredDeviceCache.clear()
 		# print "initialStart"
 		self.addTaskStartScan()
 
@@ -445,49 +447,46 @@ class BluetoothDiscoveryScreen(Screen, BluetoothDiscovery):
 		if cur:
 			selected_mac = cur[2].get("bd_addr")
 
-		self.deviceList = []
 		discoverd_devices = self.getDiscDevice()
 		if discoverd_devices:
 			device_keys = sorted(discoverd_devices.keys())
 			for k in device_keys:
 				v = discoverd_devices[k]
 				if k == "bd_addr":
-					break
-				if v["bd_addr"] in self.pairedDevices:
 					continue
-
-				device_info = v.copy()
-
-				bd_addr = device_info['bd_addr']
-
-				# check duplicate info
-				skip = False
-				for x in self.deviceList:
-					_mac_addr = x[2]['bd_addr']
-					if _mac_addr == bd_addr:
-						skip = True
-						break
-
-				if skip:
+				bd_addr = v.get("bd_addr", "")
+				if not bd_addr:
 					continue
+				self.discoveredDeviceCache[bd_addr.lower()] = v.copy()
 
-				name = device_info["name"]
-				if not name:
-					name = "NONAME"
+		# BSA clears its native discovery list when one scan cycle finishes.
+		# Keep devices already seen by this screen across automatic scan restarts,
+		# otherwise a valid result is visible only until the next empty refresh.
+		self.deviceList = []
+		paired_addresses = set(address.lower() for address in self.pairedDevices)
+		for cache_key in sorted(self.discoveredDeviceCache.keys()):
+			device_info = self.discoveredDeviceCache[cache_key].copy()
+			bd_addr = device_info["bd_addr"]
+			if bd_addr.lower() in paired_addresses:
+				continue
 
-				profile = device_info["profile"]
-				if name == bt_types.BT_GB_RCU_NAME:
-					profile = bt_types.BT_PROFILE_GB_RC
+			name = device_info["name"]
+			if not name:
+				name = "NONAME"
 
-				name += ' (' + bd_addr + ')'
-				icon = getIcon(profile)
-				deviceEntry = (name, icon, device_info)
-				self.deviceList.append(deviceEntry)
+			profile = device_info["profile"]
+			if name == bt_types.BT_GB_RCU_NAME:
+				profile = bt_types.BT_PROFILE_GB_RC
+
+			name += ' (' + bd_addr + ')'
+			icon = getIcon(profile)
+			deviceEntry = (name, icon, device_info)
+			self.deviceList.append(deviceEntry)
 
 		self["deviceList"].setList(self.deviceList)
 		if selected_mac:
 			for index, device in enumerate(self.deviceList):
-				if device[2].get("bd_addr") == selected_mac:
+				if device[2].get("bd_addr", "").lower() == selected_mac.lower():
 					self["deviceList"].setIndex(index)
 					break
 
